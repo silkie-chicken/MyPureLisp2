@@ -51,23 +51,58 @@ HashTable* newHashTable(int table_size, int keyStr_len){
 }
 
 void* set(HashTable* pHT, char* keyStr, void* pValue){
-	int n =  hashFunc(pHT->size, keyStr);
-	if (pHT->nodes[n] == NULL){
-		int len = strlen(keyStr);
-		if (len > pHT->keyStr_len){
-			perror("too long key string\n");
-			exit(1);
-		}
-		pHT->nodes[n] = newNode(keyStr, len, pValue);
+	int k =  hashFunc(pHT->size, keyStr);
+	int len = strlen(keyStr);
+
+	if (len > pHT->keyStr_len){
+		perror("too long key string\n");
+		exit(1);
+	}
+	node_t* n = pHT->nodes[k];
+	if (n == NULL){
+		pHT->nodes[k] = newNode(keyStr, len, pValue);
 		return NULL;
+	}
+	for (;;){
+		if (strcmp(n->keyStr, keyStr) == 0){
+			void* old = n->pValue;
+			n->pValue = pValue;
+			return old;
+		}
+		if (n->pNextNode == NULL){
+			n->pNextNode = newNode(keyStr, len, pValue);
+			return NULL;
+		}
+		n = n->pNextNode;
 	}
 }
 
 void* get(HashTable* pHT, char* keyStr){
-	int n = hashFunc(pHT->size, keyStr);
-	if (pHT->nodes[n] != NULL){
-		return pHT->nodes[n]->pValue;
+	int k = hashFunc(pHT->size, keyStr);
+	for (node_t* n=pHT->nodes[k]; n!=NULL; n = n->pNextNode){
+		if (strcmp(n->keyStr, keyStr) == 0) return n->pValue;
 	}
+	return NULL;
+}
+
+void* del(HashTable* pHT, char* keyStr){
+	int k = hashFunc(pHT->size, keyStr);
+	node_t* n = pHT->nodes[k];
+	if (n == NULL) return NULL;
+	if (strcmp(n->keyStr, keyStr) == 0){
+		void* vp = n->pValue;
+		pHT->nodes[k] = n->pNextNode;
+		freeNode(n);
+		return vp;
+	}
+	for (; n->pNextNode != NULL; n = n->pNextNode){
+		if (strcmp(n->pNextNode->keyStr, keyStr) != 0) continue;
+		void* vp = n->pNextNode->pValue;
+		node_t* tmp = n->pNextNode->pNextNode;
+		freeNode(n->pNextNode);
+		n->pNextNode = tmp;
+		return vp;
+	} 
 	return NULL;
 }
 

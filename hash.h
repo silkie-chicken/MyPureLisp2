@@ -12,8 +12,10 @@ typedef struct {
 }HashTable;
 
 HashTable* newHashTable(int table_size, int keyStr_len);
+//return old value
 void* set(HashTable* pHT, char* keyStr, void* pValue);
 void* get(HashTable* pHT, char* keyStr);
+//return old value
 void* del(HashTable* pHT, char* keyStr);
 
 int hashFunc(int table_size, char* keyStr);
