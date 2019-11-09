@@ -26,6 +26,8 @@ test: $(TEST_OBJECTS)
 %.o: %.c
 	$(CC) -c $(CFLAGS) -o $@ $^
 
+.PHONY: clean
 clean:
 	rm -f *.o
+	rm -f *.out
 

@@ -2,6 +2,7 @@
 #define INCLUDEGUARD_MYPURELISP_UTIL
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #define if_null_exit(val, ...) \
 	if (val == NULL){ \

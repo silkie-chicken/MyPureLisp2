@@ -1,3 +1,5 @@
+#ifndef INCLUDEGUARD_MYPURELISP_HASH 
+#define INCLUDEGUARD_MYPURELISP_HASH 
 
 typedef struct node{
 	char*        keyStr;
@@ -20,3 +22,4 @@ void* del(HashTable* pHT, char* keyStr);
 
 int hashFunc(int table_size, char* keyStr);
 
+#endif

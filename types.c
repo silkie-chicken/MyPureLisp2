@@ -23,6 +23,9 @@ void free_val(Val* val){
 		case FUNCTION:
 			break;
 		case PAIR:
+			if (val->val.pair->l != NULL) free_val(val->val.pair->l);
+			if (val->val.pair->r != NULL) free_val(val->val.pair->r);
+			free(val);
 			break;
 	}
 }
