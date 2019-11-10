@@ -1,29 +1,40 @@
 #include "reader.h"
 #include "util.h"
 
-#define MAX_WORD_NUM 24
+int skip_whitespace(int pos, char* str){
+	for(int i=0;;i++){
+		char c = str[pos];
+		if(c == ' '  ||
+		   c == '\n' ||
+			c == '\t' ||
+			c == '\r') continue;
+		return i;
+	}
+}
 
 Reader* tokenize(char* string){
 	Reader* r = alloc_reader();
-	r->pos = 0;
 	for(;;){
-		if(string[r->pos] == ' ') continue;
-		switch(string[r->pos]){
+		pos += skip_whitespace(pos, string);
+		switch(string[pos]){
 			case '(':
-				r->pos++;
-				break;
 			case ')':
-				r->pos++;
+			case ';':
+			case '\'':
+				r->words[r->pos] = (char*)malloc(sizeof(char));
+				sprintf(r->words[r->pos], "%c", string[pos]);
+				pos++;
 				break;
 			case '.':
-				break;
-			case '\'':
-				break;
+				if ()
 			default :
+				for(int i=0;;i++){
+				}
 				break;
 		}
 	}
 }
+
 
 Reader* alloc_reader(){
 	Reader* r = (Reader*)malloc(sizeof(Reader));
