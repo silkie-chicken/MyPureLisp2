@@ -10,7 +10,7 @@ int main(void){
 	}
 	reader_free(r);
 
-	char input[] = "() (  (' ;))";
+	char input[] = "(nu..n\"unu) ho 'lew 0.332 .234 ho/#$%&!?[}{][g. . ( \"\" (' ;))";
 	printf("input: \"%s\"\n", input);
 	r =  tokenize(input);
 	for (;reader_cur(r) != NULL;reader_next(r)){
@@ -21,5 +21,5 @@ int main(void){
 	printf("isNum %c: %d\n", '0'-1, isNum('0'-1));
 	printf("isNum %c: %d\n", '9'+1, isNum('9'+1));
 	printf("Alphabet %c: %d\n", 'Z', isAlphabet('Z'));
-
 }
+

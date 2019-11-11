@@ -53,13 +53,13 @@ char* reader_next(Reader* r){
 	return r->cur->string;
 }
 
-char* reader_prev(Reader* r){
-	if_null_exit(r, "can't use NULL in reader_prev(arg1)");
-	if (r->cur == NULL) return NULL;
-	r->cur = r->cur->prev;
-	if (r->cur == NULL) return NULL;
-	return r->cur->string;
-}
+//char* reader_prev(Reader* r){
+//	if_null_exit(r, "can't use NULL in reader_prev(arg1)");
+//	if (r->cur == NULL) return NULL;
+//	r->cur = r->cur->prev;
+//	if (r->cur == NULL) return NULL;
+//	return r->cur->string;
+//}
 
 char* reader_cur(Reader* r){
 	if_null_exit(r, "can't use NULL in reader_cur(arg1)");
@@ -73,11 +73,11 @@ char* reader_peepNext(Reader* r){
 	return r->cur->next->string;
 }
 
-char* reader_peepPrev(Reader* r){
-	if_null_exit(r, "can't use NULL in reader_peepPrev(arg1)");
-	if (r->cur == NULL || r->cur->prev == NULL) return NULL;
-	return r->cur->prev->string;
-}
+//char* reader_peepPrev(Reader* r){
+//	if_null_exit(r, "can't use NULL in reader_peepPrev(arg1)");
+//	if (r->cur == NULL || r->cur->prev == NULL) return NULL;
+//	return r->cur->prev->string;
+//}
 
 void  reader_append(Reader* r, Token* ts){
 	if_null_exit(r, "can't use NULL in reader_append(arg1)");
@@ -110,6 +110,8 @@ Reader* tokenize(char* string){
 	Reader* r = reader_new();	
 	int pos = 0;
 	for (;;){
+		int  i;
+		char c;
 		char* new_str_entity;
 		pos += skip_whitespace(pos, string);
 		switch(string[pos]){
@@ -123,13 +125,42 @@ Reader* tokenize(char* string){
 				reader_append(r, token_new(new_str_entity));
 				pos++;
 				break;
-			case '.':
 			case '\0':
 				return r;
+			case '.':
+				if(string[pos+1]==' '  ||
+					string[pos+1]=='\n' ||
+					string[pos+1]=='\t' ||
+					string[pos+1]=='\r' ){
+					new_str_entity = (char*)malloc(sizeof(char)*2);
+					new_str_entity[0] = string[pos];
+					new_str_entity[1] = '\0';
+					reader_append(r, token_new(new_str_entity));
+					pos++;
+				};
 			default :
-				for(int i=0;;i++){
+				i=0;
+				for(;;i++){
+					c = string[pos+i];
+					if (isAlphabet(c) || isNum(c)  ||
+						 c == '!'|| c == '?'||
+						 c == '#'|| c == '$'||
+						 c == '%'|| c == '&'||
+						 c == '='|| c == '~'||
+						 c == '^'||
+						 c == '['|| c == ']'||
+						 c == '{'|| c == '}'||
+						 c == '<'|| c == '>'||
+						 c == '.'|| c == '_'||
+						 c == '*'|| c == '/'||
+						 c == '+'|| c == '-') continue;
 					break;
 				}
+				if(i == 0) {pos++; break;}
+				new_str_entity = (char*)malloc(sizeof(char)*(i+1));
+				strncpy(new_str_entity, &(string[pos]), i);
+				reader_append(r, token_new(new_str_entity));
+				pos += i;
 				break;
 		}
 	}
