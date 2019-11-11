@@ -9,21 +9,21 @@ typedef struct token{
 
 typedef struct {
 	Token* head;
-	Token* tail;
 	Token* cur;
 }Reader;
 
-void token_new(char* str);
-void token_free(Token* token);
+Token* token_new(char* str);
+Token* token_free(Token* t);
 
 Reader* reader_new();
-void    reader_free();
+void    reader_free(Reader* r);
 char* reader_next(Reader* r);
 char* reader_prev(Reader* r);
 char* reader_cur(Reader* r);
 char* reader_peepNext(Reader* r);
 char* reader_peepPrev(Reader* r);
-void  reader_append(Reader* r, Token* ts);
+void  reader_append(Reader* r, Token* t);
+void  reader_peek(Reader* r);
 
 //
 Reader* tokenize(char* string);
