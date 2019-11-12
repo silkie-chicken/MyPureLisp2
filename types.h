@@ -51,7 +51,7 @@ Val* new_integer(int num);
 Val* new_function();
 
 void val_println(Val* v);
-void val_print(Val* v);
+void val_print(Val* v, int isBP);
 
 #endif
 

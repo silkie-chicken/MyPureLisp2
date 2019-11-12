@@ -14,9 +14,11 @@ Val* val_alloc(){
 }
 
 void val_free(Val* val){
+	if (val == NULL) return;
 	switch (val->type){
 		case NIL:
 		case TRUE:
+			break;
 		case INTEGER:
 			free(val);
 			break;
@@ -26,6 +28,7 @@ void val_free(Val* val){
 			break;
 		case FUNCTION:
 			break;
+			free(val);
 		case PAIR:
 			if (val->val.pair->l != NULL) val_free(val->val.pair->l);
 			if (val->val.pair->r != NULL) val_free(val->val.pair->r);
@@ -66,11 +69,11 @@ Val* new_function(){
 }
 
 void val_println(Val* v){
-	val_print(v);
+	val_print(v, 1);
 	printf("\n");
 }
 
-void val_print(Val* v){
+void val_print(Val* v, int isBP){
 	if (v == NULL) {
 		printf("NULL");
 	}
@@ -91,17 +94,24 @@ void val_print(Val* v){
 			printf("FUNCTION");
 			break;
 		case PAIR:
-			printf("(");
-			val_print(v->val.pair->l);
-			if (v->val.pair->r->type == PAIR){
-				printf(" ");
-				val_print(v->val.pair->r);
-			}else if(v->val.pair->r->type != NIL){
+			if(0){
+				printf("(");
+				val_print(v->val.pair->l, 1);
 				printf(" . ");
-				val_print(v->val.pair->r);
+				val_print(v->val.pair->r, 1);
+				printf(")");
+			}else{
+				if (isBP) printf("(");
+				val_print(v->val.pair->l, 1);
+				if (v->val.pair->r->type == PAIR){
+					printf(" ");
+					val_print(v->val.pair->r, 0);
+				}else if(v->val.pair->r->type != NIL){
+					printf(" . ");
+					val_print(v->val.pair->r, 0);
+				}
+				if (isBP) printf(")");
 			}
-			printf(")");
 			break;
 	}
 };
-

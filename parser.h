@@ -6,5 +6,6 @@
 #include "reader.h"
 
 Val* parse(Reader* r);
+Val* parse_list(Reader* r);
 
 #endif
