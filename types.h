@@ -39,8 +39,8 @@ typedef struct function{
 	Env *env;
 }Function;
 
-Val* alloc_val();
-void free_val(Val* val);
+Val* val_alloc();
+void val_free(Val* val);
 
 extern Val nil;// = (Val){NIL,  0};
 extern Val t;//   = (Val){TRUE, 0};
@@ -49,6 +49,9 @@ Val* new_symbol (char *string);
 Val* new_pair   (Val* l, Val* r);
 Val* new_integer(int num);
 Val* new_function();
+
+void val_println(Val* v);
+void val_print(Val* v);
 
 #endif
 

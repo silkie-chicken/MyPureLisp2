@@ -117,7 +117,6 @@ Reader* tokenize(char* string){
 		switch(string[pos]){
 			case '(':
 			case ')':
-			case ';':
 			case '\'':
 				new_str_entity = (char*)malloc(sizeof(char)*2);
 				new_str_entity[0] = string[pos];
@@ -127,6 +126,11 @@ Reader* tokenize(char* string){
 				break;
 			case '\0':
 				return r;
+			case ';':
+				for (;string[pos]!='\n';pos++){
+					if (string[pos] == '\0') return r;
+				}
+				break;
 			case '.':
 				if(string[pos+1]==' '  ||
 					string[pos+1]=='\n' ||

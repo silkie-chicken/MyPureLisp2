@@ -4,14 +4,16 @@
 #include "types.h"
 
 int main(void){
-	Val* i = new_integer(3);
-	char* buf = (char*)malloc(sizeof(char)*10);
-	sprintf(buf,"hoge");
-	Val* s = new_symbol(buf);
-	Val* p = new_pair(i, s);
-	printf("pair (%ld %s)\n", p->val.pair->l->val.integer, p->val.pair->r->val.string);
-	//free_val(p);
-	printf("pair (%ld %s)\n", p->val.pair->l->val.integer, p->val.pair->r->val.string);
+	char* buf = (char*)malloc(sizeof(char)*20);
+	sprintf(buf, "hoge");
+	Val* ns = new_symbol(buf);
+	Val* ni = new_integer(56);
+	Val* np1 = new_pair(ns, ni);
+
+	Val* nn = &nil;
+	Val* np2 = new_pair(np1, nn);
+	val_println(np2);
+	val_free(np2);
 }
 
 

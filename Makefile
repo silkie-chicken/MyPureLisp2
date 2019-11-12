@@ -4,6 +4,7 @@ CFLAGS =
 TEST_SOURCES := $(wildcard *_test.c)
 TEST_OBJECTS := $(patsubst %.c,%.out,$(wildcard *_test.c))
 TESTS := $(patsubst %.c,%o,$(wildcard *_test.c))
+ALL_OBJECTS := $(filter-out $(patsubst %.c,%.o,$(wildcard *_test.c)),$(patsubst %.c,%.o,$(wildcard *.c)))
 #lexer.c lexer.h token.c token.h eval.c eval.h parser.h parser.c tools.h tools.c
 #
 #MyPureLisp.out: main.c $(OBJS)
@@ -20,11 +21,14 @@ test: $(TEST_OBJECTS)
 		./$$obj; \
 	done
 
-%_test.out: %_test.o %.o
+
+%_test.out: %_test.o $(ALL_OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $^
+
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) -o $@ $^
+
 
 .PHONY: clean
 clean:
