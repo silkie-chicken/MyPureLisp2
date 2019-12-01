@@ -34,7 +34,6 @@ Val* parse(Reader* r){
 
 Val* parse_list(Reader* r){
 	Val* ln = parse(r);
-//	printf("%s ", reader_cur(r));
 	if (ln == NULL){
 		return &nil;
 	}

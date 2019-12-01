@@ -62,7 +62,7 @@ Val* new_integer(int num){
 	return v;
 }
 
-Val* new_function(){
+Val* new_function(Val args, Val body ,Env env){
 	Val* v = val_alloc();
 	v->type = FUNCTION;
 	return v;

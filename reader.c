@@ -124,6 +124,15 @@ Reader* tokenize(char* string){
 				reader_append(r, token_new(new_str_entity));
 				pos++;
 				break;
+			case '\"':
+				i = 1;
+				for (;string[pos+i] != '\"';i++);
+				i++;
+				new_str_entity = (char*)malloc(sizeof(char)*(i+1));
+				strncpy(new_str_entity, &(string[pos]), i);
+				reader_append(r, token_new(new_str_entity));
+				pos+=i;
+				break;
 			case '\0':
 				return r;
 			case ';':

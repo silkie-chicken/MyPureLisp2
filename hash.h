@@ -10,15 +10,14 @@ typedef struct node{
 typedef struct {
 	node_t** nodes;
 	int size;
-	int keyStr_len;
 }HashTable;
 
-HashTable* newHashTable(int table_size, int keyStr_len);
+HashTable* hashTable_new(int table_size);
 //return old value
-void* set(HashTable* pHT, char* keyStr, void* pValue);
-void* get(HashTable* pHT, char* keyStr);
+void* hashTable_set(HashTable* pHT, char* keyStr, void* pValue);
+void* hashTable_get(HashTable* pHT, char* keyStr);
 //return old value
-void* del(HashTable* pHT, char* keyStr);
+void* hashTable_del(HashTable* pHT, char* keyStr);
 
 int hashFunc(int table_size, char* keyStr);
 

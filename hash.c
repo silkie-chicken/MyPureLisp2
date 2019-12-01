@@ -10,13 +10,14 @@ int hashFunc(int table_size, char* keyStr){
 	return sum % table_size;
 }
 
-node_t* newNode(char* keyStr, int keyStr_len, void* p){
+node_t* newNode(char* keyStr, void* p){
 	node_t* n = (node_t*)malloc(sizeof(node_t));
 	if (n == NULL){
 		perror("can't allocate memory of hash table's node\n");
 		exit(1);
 	}
-	n->keyStr = (char*)malloc(sizeof(char)*keyStr_len);
+	int len = strlen(keyStr)+1;
+	n->keyStr = (char*)malloc(sizeof(char)*len);
 	if (n == NULL){
 		perror("can't allocate memory of hashtable's node->keyStr\n");
 		exit(1);
@@ -33,14 +34,13 @@ void freeNode(node_t* n){
 	free (n);
 }
 
-HashTable* newHashTable(int table_size, int keyStr_len){
+HashTable* hashTable_new(int table_size){
 	HashTable* h = (HashTable*)malloc(sizeof(HashTable));
 	if (h == NULL){
 		perror("can't allocate memory of hashtable\n");
 		exit(1);
 	}
 	h->size        = table_size;
-	h->keyStr_len  = keyStr_len;
 	h->nodes       = (node_t**)malloc(sizeof(node_t*)*table_size);
 	if (h->nodes == NULL){
 		perror("can't allocate memory of hashtable->nodes\n");
@@ -50,17 +50,12 @@ HashTable* newHashTable(int table_size, int keyStr_len){
 	return h;
 }
 
-void* set(HashTable* pHT, char* keyStr, void* pValue){
+void* hashTable_set(HashTable* pHT, char* keyStr, void* pValue){
 	int k =  hashFunc(pHT->size, keyStr);
-	int len = strlen(keyStr);
 
-	if (len > pHT->keyStr_len){
-		perror("too long key string\n");
-		exit(1);
-	}
 	node_t* n = pHT->nodes[k];
 	if (n == NULL){
-		pHT->nodes[k] = newNode(keyStr, len, pValue);
+		pHT->nodes[k] = newNode(keyStr, pValue);
 		return NULL;
 	}
 	for (;;){
@@ -70,14 +65,14 @@ void* set(HashTable* pHT, char* keyStr, void* pValue){
 			return old;
 		}
 		if (n->pNextNode == NULL){
-			n->pNextNode = newNode(keyStr, len, pValue);
+			n->pNextNode = newNode(keyStr, pValue);
 			return NULL;
 		}
 		n = n->pNextNode;
 	}
 }
 
-void* get(HashTable* pHT, char* keyStr){
+void* hashTable_get(HashTable* pHT, char* keyStr){
 	int k = hashFunc(pHT->size, keyStr);
 	for (node_t* n=pHT->nodes[k]; n!=NULL; n = n->pNextNode){
 		if (strcmp(n->keyStr, keyStr) == 0) return n->pValue;
@@ -85,7 +80,7 @@ void* get(HashTable* pHT, char* keyStr){
 	return NULL;
 }
 
-void* del(HashTable* pHT, char* keyStr){
+void* hashTable_del(HashTable* pHT, char* keyStr){
 	int k = hashFunc(pHT->size, keyStr);
 	node_t* n = pHT->nodes[k];
 	if (n == NULL) return NULL;
