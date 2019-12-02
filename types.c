@@ -68,6 +68,15 @@ Val* new_function(Val args, Val body ,Env env){
 	return v;
 }
 
+Val* new_buildin_function(Val* (*bf)(Val*)){
+	Val* v = val_alloc();
+	v->type = BUILDIN_FUNCTION;
+	v->val.b_func = (BuildinFunction*)malloc(sizeof(BuildinFunction));
+	if_null_exit(v->val.b_func, "can't allocate memory in new_buildin_function\n");
+	v->val.b_func->body = bf;
+	return v;
+}
+
 void val_println(Val* v){
 	val_print(v, 1);
 	printf("\n");
@@ -120,7 +129,37 @@ void val_print(Val* v, int isBP){
 };
 
 // fundamental functions
-Val* cons (Val* a, Val* b){
+
+Val* fundamental_car(Val* l){
+	if (l->type != PAIR){
+		printf("too few args in car\n");
+		exit(1);
+	}
+	if (l->val.pair->l->type == PAIR) return l->val.pair->l->val.pair->l;
+	if (l->val.pair->l->type == NIL)  return l->val.pair->l;
+	//エラー処理は適当
+	val_print(l, 1);
+	printf(" is not a list\n");
+	exit(1);
+}
+
+Val* fundamental_cdr(Val* l){
+	if (l->type != PAIR){
+		printf("too few args in cdr\n");
+		exit(1);
+	}
+	if (l->val.pair->l->type == PAIR) return l->val.pair->l->val.pair->r;
+	if (l->val.pair->l->type == NIL)  return l->val.pair->l;
+	//エラー処理は適当
+	val_print(l, 1);
+	printf(" is not a list\n");
+	exit(1);
+}
+
+Val* fundamental_cons(Val* l){
+	if (l->type != PAIR) printf("too few args in cons\n");
+	if (l->val.pair->r->type != PAIR) printf("too few args in cons\n");
+	return new_pair(l->val.pair->l, l->val.pair->r->val.pair->l);
 }
 
 Env* env_new(){
@@ -128,11 +167,16 @@ Env* env_new(){
 	if_null_exit(env, "can't allocate memory in env_new()\n");
 	env->functions = hashTable_new(10);
 	env->variables = hashTable_new(10);
+	env_regist(env, "car", new_buildin_function(fundamental_car));//new_buildin_function(fundamental_car));
+	env_regist(env, "cdr", new_buildin_function(fundamental_cdr));//new_buildin_function(fundamental_car));
+	env_regist(env, "cons", new_buildin_function(fundamental_cons));//new_buildin_function(fundamental_car));
 	return env;
 }
 
 void env_regist(Env* env, char* keyStr, Val* val){
-	if_null_exit(val, "can't use NULL in env_regist(env, val\n");
+	if_null_exit(env, "can't use NULL in env_regist(env, keyStr, val\n");
+	if_null_exit(keyStr, "can't use NULL in env_regist(env, keyStr, val\n");
+	if_null_exit(val, "can't use NULL in env_regist(env, keyStr, val\n");
 //	hashTable_set(env->functions, keyStr, (void*)val);
 	hashTable_set(env->variables, keyStr, (void*)val);
 }

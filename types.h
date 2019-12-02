@@ -48,7 +48,7 @@ typedef struct function{
 }Function;
 
 typedef struct buildin_function{
-	Val* (*body)(Val* args);
+	Val* (*body)(Val*);
 }BuildinFunction;
 
 Val* val_alloc();
@@ -61,6 +61,7 @@ Val* new_symbol (char* string);
 Val* new_pair   (Val* l, Val* r);
 Val* new_integer(int num);
 Val* new_function(Val args, Val body ,Env env);
+Val* new_buildin_function(Val* (*bf)(Val*));
 
 void val_println(Val* v);
 void val_print(Val* v, int isBP);
@@ -70,5 +71,8 @@ void env_regist(Env* env, char* keyStr, Val* val);
 Val* env_fetch (Env* env, char* keyStr);
 void env_println(Env* env);
 
+Val* fundamental_car(Val* l);
+Val* fundamental_cdr(Val* l);
+Val* fundamental_cons(Val* l);
 #endif
 
