@@ -2,7 +2,7 @@
 #define INCLUDEGUARD_MYPURELISP_TYPES
 
 #include <stdint.h>
-#include "env.h"
+#include "hash.h"
 
 typedef enum {
 	//ATOMS
@@ -13,7 +13,7 @@ typedef enum {
 	FUNCTION = 0x10,
 	BUILDIN_FUNCTION = 0x20,
 
-	PAIR     = 0x20
+	PAIR     = 0x40
 }Type;
 
 struct pair;
@@ -36,6 +36,11 @@ typedef struct pair{
 	Val* r;
 }Pair;
 
+typedef struct env{
+	HashTable* functions;
+	HashTable* variables;
+}Env;
+
 typedef struct function{
 	Val* args;
 	Val* body;
@@ -43,7 +48,7 @@ typedef struct function{
 }Function;
 
 typedef struct buildin_function{
-	Val* (*body)(Val args);
+	Val* (*body)(Val* args);
 }BuildinFunction;
 
 Val* val_alloc();
@@ -59,6 +64,11 @@ Val* new_function(Val args, Val body ,Env env);
 
 void val_println(Val* v);
 void val_print(Val* v, int isBP);
+
+Env* env_new();
+void env_regist(Env* env, char* keyStr, Val* val);
+Val* env_fetch (Env* env, char* keyStr);
+void env_println(Env* env);
 
 #endif
 

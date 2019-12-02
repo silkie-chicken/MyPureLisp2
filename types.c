@@ -93,8 +93,11 @@ void val_print(Val* v, int isBP){
 		case FUNCTION:
 			printf("FUNCTION");
 			break;
+		case BUILDIN_FUNCTION:
+			printf("BUILDIN_FUNCTION");
+			break;
 		case PAIR:
-			if(0){
+			if(0){ //is all cons cell
 				printf("(");
 				val_print(v->val.pair->l, 1);
 				printf(" . ");
@@ -115,3 +118,47 @@ void val_print(Val* v, int isBP){
 			break;
 	}
 };
+
+// fundamental functions
+Val* cons (Val* a, Val* b){
+}
+
+Env* env_new(){
+	Env* env = (Env*)malloc(sizeof(Env));
+	if_null_exit(env, "can't allocate memory in env_new()\n");
+	env->functions = hashTable_new(10);
+	env->variables = hashTable_new(10);
+	return env;
+}
+
+void env_regist(Env* env, char* keyStr, Val* val){
+	if_null_exit(val, "can't use NULL in env_regist(env, val\n");
+//	hashTable_set(env->functions, keyStr, (void*)val);
+	hashTable_set(env->variables, keyStr, (void*)val);
+}
+
+Val* env_fetch(Env* env, char* keyStr){
+	if_null_exit(env,    "can't use NULL in env_get(env, _\n");
+	if_null_exit(keyStr, "can't use NULL in env_get(_, keyStr\n");
+//	hashTable_set(env->functions, keyStr, (void*)val);
+	void* val = hashTable_get(env->variables, keyStr);
+	if (val == NULL){
+		printf("the variable \'%s\' has no value\n", keyStr);
+		exit(1);
+	}
+	return (Val*)val;
+}
+
+//ここ特に汚い
+void env_println(Env* env){
+	node_t** arr = env->variables->nodes;
+	int size = env->variables->size;
+	for (int i=0;i<size;i++){
+		for (node_t* c = arr[i];c!=NULL;c = c->pNextNode){
+			printf("symbal \'%s\' : ", c->keyStr);
+			val_print((Val*)(c->pValue), 1);
+			printf("\n");
+		}
+	}
+}
+

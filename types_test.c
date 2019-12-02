@@ -12,6 +12,15 @@ int main(void){
 
 	Val* np2 = new_pair(np1, &nil);
 	val_println(np2);
+
+	Env* env = env_new();
+	printf ("~~~~env~~~~\n");
+	env_println(env);
+	env_regist(env, "val1", np2);
+	env_regist(env, "val2", np2);
+	val_println(env_fetch(env, "val1")); 
+	env_println(env);
+
 	val_free(np2);
 }
 
