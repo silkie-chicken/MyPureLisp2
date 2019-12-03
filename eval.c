@@ -30,19 +30,29 @@ Val* cond(Val* args,Env* env){
 }
 
 //(lambda (x) (* x x))
-//((x) . ((* x x) . ((* x x) . nil)))
-Val* lambda(Val* args, Env* env){
+//((x) . ((* x x) . nil)))
+//(lambda () 3)
+//(() . (3 . nil)))
+Val* lambda(Val* args){
 	if (args->type != PAIR) {
-		printf("too few args in lambda");
+		printf("too few args in lambda\n");
 		exit(1);
 	}
 	Val* a = args->val.pair->l;
 	if (args->val.pair->r->type != PAIR) {
-		printf("too few args in lambda");
+		printf("too few args in lambda\n");
 		exit(1);
 	}
 	Val* b = args->val.pair->r->val.pair->l;
-	return new_function(a, b, env);
+	if (args->val.pair->r->type != PAIR){
+		printf("too few args in lambda\n");
+		exit(1);
+	}
+	return new_function(a, b);
+}
+
+Val* define(Val* args, Env* env){
+	return &nil;
 }
 
 //どこで折った枝の実体を消すのか?
@@ -59,10 +69,10 @@ Val* eval(Val* ast, Env* env){
 		case PAIR:
 			//specialform
 			if (ast->val.pair->l->type == SYMBOL){
-				if (strcmp(ast->val.pair->l->val.string, "quote") == 0){return quote(ast->val.pair->r);
-				}else if (strcmp(ast->val.pair->l->val.string, "cond") == 0){return cond(ast->val.pair->r, env);
-				}else if (strcmp(ast->val.pair->l->val.string, "lambda") == 0){
-				}else if (strcmp(ast->val.pair->l->val.string, "define") == 0){
+				if (strcmp(ast->val.pair->l->val.string, "quote") == 0){       return quote (ast->val.pair->r);
+				}else if (strcmp(ast->val.pair->l->val.string, "cond") == 0){  return cond  (ast->val.pair->r, env);
+				}else if (strcmp(ast->val.pair->l->val.string, "lambda") == 0){return lambda(ast->val.pair->r);
+				}else if (strcmp(ast->val.pair->l->val.string, "define") == 0){return define(ast->val.pair->r, env);
 				}
 			}
 
@@ -80,7 +90,21 @@ Val* eval(Val* ast, Env* env){
 				}
 				cur->val.pair->l = eval(cur->val.pair->l ,env);
 			}
-			if (ast->val.pair->l->type == FUNCTION)printf("hgeohgoehgeohgoeh\n");
+			if (ast->val.pair->l->type == FUNCTION){
+				Val* cur_args = ast->val.pair->r;
+				Val* cur_keys = ast->val.pair->l->val.func->args;
+				for (;;){
+					if ((cur_args->type != PAIR) || (cur_keys->type != PAIR)) break;
+					if (cur_keys->val.pair->l->type != SYMBOL){
+						printf("ひきすうにしんぼるいがいつかうな定期\n");
+						exit(1);
+					}
+					env_regist(env, cur_keys->val.pair->l->val.string, cur_args->val.pair->l);
+					cur_args = cur_args->val.pair->r;
+					cur_keys = cur_keys->val.pair->r;
+				}
+				return eval(ast->val.pair->l->val.func->body, env);
+			}
 			if (ast->val.pair->l->type == BUILDIN_FUNCTION){
 				return (*(ast->val.pair->l->val.b_func->body))(ast->val.pair->r);
 			}

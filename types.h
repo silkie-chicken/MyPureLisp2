@@ -60,7 +60,7 @@ extern Val t;//   = (Val){TRUE, 0};
 Val* new_symbol (char* string);
 Val* new_pair   (Val* l, Val* r);
 Val* new_integer(int num);
-Val* new_function(Val* args, Val* body ,Env* env);
+Val* new_function(Val* args, Val* body);
 Val* new_buildin_function(Val* (*bf)(Val*));
 
 void val_println(Val* v);

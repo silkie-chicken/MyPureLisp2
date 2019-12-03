@@ -63,9 +63,13 @@ Val* new_integer(int num){
 	return v;
 }
 
-Val* new_function(Val* args, Val* body ,Env* env){
+Val* new_function(Val* args, Val* body){
 	Val* v = val_alloc();
 	v->type = FUNCTION;
+	v->val.func = (Function*)malloc(sizeof(Function));
+	v->val.func->args = args;
+	v->val.func->body = body;
+//	v->val.func->env  = env;
 	return v;
 }
 
@@ -101,7 +105,10 @@ void val_print(Val* v, int isBP){
 			printf("%ld", v->val.integer);
 			break;
 		case FUNCTION:
-			printf("FUNCTION");
+			printf("#<FUNCTION :LAMBDA ");
+			val_print(v->val.func->args, 1);
+			printf(" ");
+			val_println(v->val.func->body);
 			break;
 		case BUILDIN_FUNCTION:
 			printf("BUILDIN_FUNCTION");
