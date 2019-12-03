@@ -1,11 +1,13 @@
 # MyPureLisp2
-this is a hoby!
 
-取り敢えず動きます
+取り敢えず動く
 
-TODO
+TODO:
+
 GC実装
+
 メモリ管理整理
 
 厳密にはpure lispと言えるか怪しい
+
 とくにスコープ関係
