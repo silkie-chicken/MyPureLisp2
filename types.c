@@ -202,6 +202,65 @@ Val* fundamental_eq(Val* l){
 	return &t;
 }
 
+Val* fundamental_plus(Val* l){
+	int acc=0;
+	for (Val* cur = l; cur->type == PAIR; cur = cur->val.pair->r){
+		if(cur->val.pair->l->type != INTEGER){
+			printf("only integer can be used in plus\n");
+			exit(0);
+		}
+		acc += cur->val.pair->l->val.integer;
+	}
+	return new_integer(acc);
+}
+
+Val* fundamental_minus(Val* l){
+	if (l->type != PAIR || l->val.pair->l->type != INTEGER){
+		printf("too few or invalid args in minus\n");
+		exit(1);
+	}
+	int acc = l->val.pair->l->val.integer;
+	if (l->val.pair->r->type != PAIR) return new_integer(-acc);
+	for (Val* cur = l->val.pair->r; cur->type == PAIR; cur = cur->val.pair->r){
+		if(cur->val.pair->l->type != INTEGER){
+			printf("only integer can be used in minus\n");
+			exit(0);
+		}
+		acc -= cur->val.pair->l->val.integer;
+	}
+	return new_integer(acc);
+}
+
+Val* fundamental_mul(Val* l){
+	int acc=1;
+	for (Val* cur = l; cur->type == PAIR; cur = cur->val.pair->r){
+		if(cur->val.pair->l->type != INTEGER){
+			printf("only integer can be used in mul\n");
+			exit(0);
+		}
+		acc *= cur->val.pair->l->val.integer;
+	}
+	return new_integer(acc);
+}
+
+//TODO div zero
+Val* fundamental_div(Val* l){
+	if (l->type != PAIR || l->val.pair->l->type != INTEGER){
+		printf("too few or invalid args in div\n");
+		exit(1);
+	}
+	int acc = l->val.pair->l->val.integer;
+	if (l->val.pair->r->type != PAIR) return new_integer(1/acc);
+	for (Val* cur = l->val.pair->r; cur->type == PAIR; cur = cur->val.pair->r){
+		if(cur->val.pair->l->type != INTEGER){
+			printf("only integer can be used in div\n");
+			exit(0);
+		}
+		acc /= cur->val.pair->l->val.integer;
+	}
+	return new_integer(acc);
+}
+
 Env* env_new(){
 	Env* env = (Env*)malloc(sizeof(Env));
 	if_null_exit(env, "can't allocate memory in env_new()\n");
@@ -212,6 +271,11 @@ Env* env_new(){
 	env_regist(env, "cons", new_buildin_function(fundamental_cons));//new_buildin_function(fundamental_car));
 	env_regist(env, "eq", new_buildin_function(fundamental_eq));//new_buildin_function(fundamental_car));
 	env_regist(env, "atom", new_buildin_function(fundamental_atom));//new_buildin_function(fundamental_car));
+	//これはついで
+	env_regist(env, "+", new_buildin_function(fundamental_plus));//new_buildin_function(fundamental_car));
+	env_regist(env, "-", new_buildin_function(fundamental_minus));//new_buildin_function(fundamental_car));
+	env_regist(env, "*", new_buildin_function(fundamental_mul));//new_buildin_function(fundamental_car));
+	env_regist(env, "/", new_buildin_function(fundamental_div));//new_buildin_function(fundamental_car));
 	return env;
 }
 
