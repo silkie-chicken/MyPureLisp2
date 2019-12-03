@@ -2,6 +2,8 @@
 
 取り敢えず動く
 
+`make run`
+
 TODO:
 
 GC実装
