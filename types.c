@@ -108,10 +108,11 @@ void val_print(Val* v, int isBP){
 			printf("#<FUNCTION :LAMBDA ");
 			val_print(v->val.func->args, 1);
 			printf(" ");
-			val_println(v->val.func->body);
+			val_print(v->val.func->body, 1);
+			printf(">");
 			break;
 		case BUILDIN_FUNCTION:
-			printf("BUILDIN_FUNCTION");
+			printf("#<BUILDIN_FUNCTION なんか>");
 			break;
 		case PAIR:
 			if(0){ //is all cons cell

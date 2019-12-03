@@ -52,7 +52,15 @@ Val* lambda(Val* args){
 }
 
 Val* define(Val* args, Env* env){
-	return &nil;
+	if (args->type != PAIR || args->val.pair->l->type != SYMBOL || args->val.pair->r->type != PAIR){
+		printf("後で考えるin define\n");
+		exit(1);
+	}
+	
+	char* key = args->val.pair->l->val.string; 
+	Val* val = eval(args->val.pair->r->val.pair->l, env);
+	env_regist(env, key, val);
+	return val;
 }
 
 //どこで折った枝の実体を消すのか?
