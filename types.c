@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "types.h"
 #include "util.h"
 
@@ -62,7 +63,7 @@ Val* new_integer(int num){
 	return v;
 }
 
-Val* new_function(Val args, Val body ,Env env){
+Val* new_function(Val* args, Val* body ,Env* env){
 	Val* v = val_alloc();
 	v->type = FUNCTION;
 	return v;
@@ -129,7 +130,6 @@ void val_print(Val* v, int isBP){
 };
 
 // fundamental functions
-
 Val* fundamental_car(Val* l){
 	if (l->type != PAIR){
 		printf("too few args in car\n");
@@ -162,6 +162,38 @@ Val* fundamental_cons(Val* l){
 	return new_pair(l->val.pair->l, l->val.pair->r->val.pair->l);
 }
 
+Val* fundamental_atom(Val* l){
+	if (l->val.pair->l->type == PAIR) return &nil;
+	return &t;
+}
+
+Val* fundamental_eq(Val* l){
+	if (l->type != PAIR) printf("too few args in eq\n");
+	Val* v1 = l->val.pair->l;
+	if (l->val.pair->r->type != PAIR) printf("too few args in eq\n");
+	Val* v2 = l->val.pair->r->val.pair->l;
+	if (v1->type != v2->type) return &nil;
+	switch (v1->type){
+		case NIL:
+			break;
+		case TRUE:
+			break;
+		case INTEGER:
+			if (v1->val.integer != v2->val.integer) return &nil;
+			break;
+		case SYMBOL:
+			if (strcmp(v1->val.string, v2->val.string) != 0) return &nil;
+			break;
+		case BUILDIN_FUNCTION:
+			if (v1->val.b_func != v2->val.b_func) return &nil;
+			break;
+		case FUNCTION:
+		//TODO
+			break;
+	}
+	return &t;
+}
+
 Env* env_new(){
 	Env* env = (Env*)malloc(sizeof(Env));
 	if_null_exit(env, "can't allocate memory in env_new()\n");
@@ -170,13 +202,15 @@ Env* env_new(){
 	env_regist(env, "car", new_buildin_function(fundamental_car));//new_buildin_function(fundamental_car));
 	env_regist(env, "cdr", new_buildin_function(fundamental_cdr));//new_buildin_function(fundamental_car));
 	env_regist(env, "cons", new_buildin_function(fundamental_cons));//new_buildin_function(fundamental_car));
+	env_regist(env, "eq", new_buildin_function(fundamental_eq));//new_buildin_function(fundamental_car));
+	env_regist(env, "atom", new_buildin_function(fundamental_atom));//new_buildin_function(fundamental_car));
 	return env;
 }
 
 void env_regist(Env* env, char* keyStr, Val* val){
-	if_null_exit(env, "can't use NULL in env_regist(env, keyStr, val\n");
+	if_null_exit(env,    "can't use NULL in env_regist(env, keyStr, val\n");
 	if_null_exit(keyStr, "can't use NULL in env_regist(env, keyStr, val\n");
-	if_null_exit(val, "can't use NULL in env_regist(env, keyStr, val\n");
+	if_null_exit(val,    "can't use NULL in env_regist(env, keyStr, val\n");
 //	hashTable_set(env->functions, keyStr, (void*)val);
 	hashTable_set(env->variables, keyStr, (void*)val);
 }

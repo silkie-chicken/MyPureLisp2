@@ -5,6 +5,7 @@ TEST_SOURCES := $(wildcard *_test.c)
 TEST_OBJECTS := $(patsubst %.c,%.out,$(wildcard *_test.c))
 TESTS := $(patsubst %.c,%o,$(wildcard *_test.c))
 ALL_OBJECTS := $(filter-out $(patsubst %.c,%.o,$(wildcard *_test.c)),$(patsubst %.c,%.o,$(wildcard *.c)))
+ALL_OBJECTS := $(filter-out main.o ,$(ALL_OBJECTS))
 #lexer.c lexer.h token.c token.h eval.c eval.h parser.h parser.c tools.h tools.c
 #
 #MyPureLisp.out: main.c $(OBJS)
@@ -17,10 +18,9 @@ ALL_OBJECTS := $(filter-out $(patsubst %.c,%.o,$(wildcard *_test.c)),$(patsubst 
 .PHONY: test
 test: $(TEST_OBJECTS)
 	@for obj in $(TEST_OBJECTS); do \
-		echo "about: $$obj ----------------------------------"; \
+		echo "about: $$obj ----------------------------------------------------"; \
 		./$$obj; \
 	done
-
 
 %_test.out: %_test.o $(ALL_OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $^
@@ -29,6 +29,12 @@ test: $(TEST_OBJECTS)
 %.o: %.c
 	$(CC) -c $(CFLAGS) -o $@ $^
 
+
+run: main.out
+	./main.out
+
+main.out: main.c $(ALL_OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $^ 
 
 .PHONY: clean
 clean:

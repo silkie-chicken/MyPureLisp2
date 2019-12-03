@@ -38,6 +38,10 @@ Val* parse_list(Reader* r){
 		return &nil;
 	}
 	reader_next(r);
+	if (strcmp(reader_cur(r), ".") == 0){
+		reader_next(r);
+		return new_pair(ln, parse(r));
+	}
 	return new_pair(ln, parse_list(r));
 }
 

@@ -6,7 +6,7 @@
 #include "parser.h"
 
 void test(char* input){
-	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	printf("input: \"%s\"\n", input);
 	Reader* r =  tokenize(input);
 	printf("tokens: ");
@@ -23,7 +23,8 @@ void test(char* input){
 
 int main(void){
 	test("()");
-	test("(car (1 2 3))");
+	test("(car '(1 2 3))");
 	test("'(1 2 3)");
+	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	return 0;
 }
