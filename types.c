@@ -92,7 +92,22 @@ Val* val_cdr(Val* list){
 	return list->val.pair->r;
 }
 
-Val* val_println(Val* v){
+//第二引数から始まるリストの全要素に関数を適用し，新しいリストを返す
+//渡す関数に可能な限り新しい値を返すことを期待する
+Val* mapcar(Val* (*func)(Val*), Val* list){
+	if (list->type == NIL) return &nil;
+	Val* bp = new_pair(&nil, &nil);
+
+	Val** d = &(bp->val.pair->l);
+	for(Val* cur=list; list->type != NIL; cur = val_cdr(cur)){
+		if (list->type != PAIR) return NULL; //リストでは無かった
+		*d = new_pair((*func)(val_car(cur)), &nil);
+		d  = &((*d)->val.pair->r);
+	}
+	return bp;
+}
+
+void val_println(Val* v){
 	val_print(v, 1);
 	printf("\n");
 }

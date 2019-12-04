@@ -64,8 +64,8 @@ Val* new_function(Val* args, Val* body);
 Val* new_buildin_function(Val* (*bf)(Val*));
 
 //Pairじゃない時エラー吐く
-Val* val_car(val* list);
-Val* val_cdr(val* list);
+Val* val_car(Val* list);
+Val* val_cdr(Val* list);
 
 void val_println(Val* v);
 void val_print(Val* v, int isBP);
