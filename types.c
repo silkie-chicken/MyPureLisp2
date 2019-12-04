@@ -82,7 +82,17 @@ Val* new_buildin_function(Val* (*bf)(Val*)){
 	return v;
 }
 
-void val_println(Val* v){
+Val* val_car(Val* list){
+	if (list->type != PAIR || list->type != NIL) return NULL;
+	return list->val.pair->l;
+}
+
+Val* val_cdr(Val* list){
+	if (list->type != PAIR || list->type != NIL) return NULL;
+	return list->val.pair->r;
+}
+
+Val* val_println(Val* v){
 	val_print(v, 1);
 	printf("\n");
 }
