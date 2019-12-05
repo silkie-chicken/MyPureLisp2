@@ -17,11 +17,13 @@ void test(char* input){
 }
 
 int main(void){
+/*
 	test("((a) 32 t nil)");
 	test("nil");
 	test("()");
 	test("'hoge");
 	test("'(1 2 3 (hoge '3 nil))");
+*/
 }
 
 

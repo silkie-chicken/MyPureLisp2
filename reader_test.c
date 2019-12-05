@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 int main(void){
+	/*
 	Reader* r = reader_new();
 	reader_append(r, token_new("t1"));
 	reader_append(r, token_new("t2"));
@@ -21,5 +22,6 @@ int main(void){
 	printf("isNum %c: %d\n", '0'-1, isNum('0'-1));
 	printf("isNum %c: %d\n", '9'+1, isNum('9'+1));
 	printf("Alphabet %c: %d\n", 'Z', isAlphabet('Z'));
+	*/
 }
 
