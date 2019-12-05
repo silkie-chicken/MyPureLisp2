@@ -23,11 +23,11 @@
 		void* data; \
 	}name;
 
-#define REGIST_METHODS(name, member_block, methods_block) \
+#define TYPEDEF_WITH_METHODS(name, member_block, methods_block) \
 	extern struct methods_block \
 	name##Methods; \
 	\
-	typdef struct { \
+	typedef struct { \
 		void* data; \
 	}name;
 

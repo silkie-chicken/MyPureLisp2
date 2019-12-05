@@ -8,9 +8,9 @@ TYPEDEF_INTERFACE(SortAble, {
 TYPEDEF_WITH_METHODS(Array, {
 		int array[];
 		int num;
-	},{
-		void (*Swap)     (int, int);
-		int  (*LeftIsBig)(int, int);
+	}, {
+		void (*Swap)     (void* , int, int);
+		int  (*LeftIsBig)(void* , int, int);
 	})
 
 

@@ -4,6 +4,7 @@
 //Array型へMethodを定義したことにする=================
 void Array_Swap(Array* arr, int a, int b){
 }
+
 int Array_LeftIsBig(Array* arr, int a, int b){
 	return 0;
 }
