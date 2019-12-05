@@ -10,29 +10,30 @@
 		exit(1); \
 	}
 
-/*
-typedef struct ops{
-	int (*hoge)(int, int);
-	int (*wiwe)(char*);
-}
-
-typedef struct interface{
-	struct ops;
-	void*  priv;
-}hogehoge Interface;
-
-//新しいインターフェイス型の名前　関数群 int hoge(int,int)
-#define TYPEDEF_INTERFACE(name, ...) \
-	typedef struct{ \
-	\
-	}ops; \
+//use in header file
+//操作関数の構造体の実体を宣言
+//任意の名前のInterfaceの実体を定義
+//TYPEDEF_INTERFACE (新しいインターフェイス型の名前, {関数ポインタ;, 関数ポインタ; ...}) 
+#define TYPEDEF_INTERFACE(name, methods_block) \
+	typedef struct name##_methods methods_block\
+	name##Methods; \
 	\
 	typedef struct{ \
-
+		struct name ##_methods* methods; \
+		void* data; \
 	}name;
 
+#define REGIST_METHODS(name, member_block, methods_block) \
+	extern struct methods_block \
+	name##Methods; \
+	\
+	typdef struct { \
+		void* data; \
+	}name;
 
-//
+//#define SETF_INTERFACE(name_of_interface, name_of_variables, name_of_type) \
+//	name_of_interface ## _methods_instance.Swap = name_of_type ## _Swap
+
 //typedef struct hoge{
 //	int oseijf; 
 //	int osie;
@@ -48,5 +49,4 @@ typedef struct interface{
 
 //#define TYPEDEF_Interface(name,, ...)
 
-*/
 #endif
