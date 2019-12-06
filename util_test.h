@@ -5,13 +5,13 @@ TYPEDEF_INTERFACE(SortAble, {
 		int  (*LeftIsBig)(int, int);
 	})
 
-TYPEDEF_WITH_METHODS(Array, {
-		int array[];
+TYPEDEF_STRUCT_WITH_METHODS(Array,
+		int array;
 		int num;
-	}, {
-		void (*Swap)     (void* , int, int);
-		int  (*LeftIsBig)(void* , int, int);
-	})
+		,
+		 void (*Nth) (void* , int);
+		 void (*Swap)(void* , int, int);
+		 int  (*LeftIsBig)(void* , int, int);)
 
 
 
