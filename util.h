@@ -23,18 +23,29 @@
 		void* data; \
 	}name;
 
+
+#define REGIST_METHOD(obj_name, method_name) \
+	obj_name##Methods.method_name = obj_name##_##method_name;
+
+#define CLEATE_METHOD_INSTANCE(name) \
+	struct name##_methods name##Methods;
+
+
 #define TYPEDEF_STRUCT_WITH_METHODS(name, members_block, methods_block) \
-	typedef struct name##_methods { int array; int num; \
+	struct name##_methods { \
 		methods_block \
-	}name##Methods; \
+	}; \
+	\
+	extern struct name##_methods name##Methods; \
 	\
 	typedef struct { \
 		struct name##_methods* methods; \
 		members_block \
 	}name;
 
-#define METHOD_CALL(obj, funcname, args) \
-	funcname(args);
+
+#define METHOD_CALL(obj, funcname) \
+	((obj).methods->funcname)
 
 //#define SETF_INTERFACE(name_of_interface, name_of_variables, name_of_type) \
 //	name_of_interface ## _methods_instance.Swap = name_of_type ## _Swap
