@@ -6,7 +6,7 @@
 
 int isInteger(char* str){
 	int n = atoi(str);
-	if (n == 0 || strcmp(str, "0") == 0) return 0;
+	if (strcmp(str, "0") != 0 && n == 0) return 0;
 	return 1;
 }
 
