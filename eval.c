@@ -63,7 +63,7 @@ Val* define(Val* args, Env* env){
 	return val;
 }
 
-//どこで折った枝の実体を消すのか?
+//TODO どこで折った枝の実体を消すのか
 Val* eval(Val* ast, Env* env){
 	switch(ast->type){
 		case NIL:

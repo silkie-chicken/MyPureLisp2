@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "types.h"
+#include "util.h"
 
 int main(void){
+	/*
 	char* buf = (char*)malloc(sizeof(char)*5);
 	sprintf(buf, "hoge");
 	Val* ns = new_symbol(buf);
@@ -20,8 +22,11 @@ int main(void){
 	env_regist(env, "val2", np2);
 	val_println(env_fetch(env, "val1")); 
 //	env_println(env);
+//
+	if_null_exit(NULL, "can't allocate memory in val_alloc()\n" "hoge\n");
 
 	val_free(np2);
+	*/
 }
 
 

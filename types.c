@@ -291,12 +291,12 @@ Val* env_fetch(Env* env, char* keyStr){
 	if_null_exit(env,    "can't use NULL in env_get(env, _\n");
 	if_null_exit(keyStr, "can't use NULL in env_get(_, keyStr\n");
 //	hashTable_set(env->functions, keyStr, (void*)val);
-	void* val = hashTable_get(env->variables, keyStr);
+	Val* val = (Val*)hashTable_get(env->variables, keyStr);
 	if (val == NULL){
 		printf("the variable \'%s\' has no value\n", keyStr);
 		exit(1);
 	}
-	return (Val*)val;
+	return val;
 }
 
 //ここ特に汚い

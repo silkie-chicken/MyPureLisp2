@@ -3,6 +3,7 @@
 #include "hash.h"
 
 int main(void){
+/*
 	printf("hashFunc: %d\n", hashFunc(20, "hogera"));
 	printf("hashFunc: %d\n", hashFunc(20, "hogdsa"));
 
@@ -22,5 +23,6 @@ int main(void){
 	int z = (long int)hashTable_del(ht, "hogdsa");
 	printf("del val: %d\n", z);
 
+*/
 	return 0;
 }

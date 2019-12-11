@@ -22,9 +22,11 @@ void test(char* input){
 }
 
 int main(void){
+/*
 	test("()");
 	test("(car '(1 2 3))");
 	test("'(1 2 3)");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+*/
 	return 0;
 }
