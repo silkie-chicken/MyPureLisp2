@@ -14,6 +14,7 @@ Val* val_alloc(){
 	v->val.integer = 0;
 }
 
+//TODO PAIRに関して不正
 void val_free(Val* val){
 	if (val == NULL) return;
 	switch (val->type){
@@ -82,6 +83,31 @@ Val* new_buildin_function(Val* (*bf)(Val*)){
 	return v;
 }
 
+Val* val_car(Val* list){
+	if (list->type != PAIR && list->type != NIL) return NULL;
+	return list->val.pair->l;
+}
+
+Val* val_cdr(Val* list){
+	if (list->type != PAIR && list->type != NIL) return NULL;
+	return list->val.pair->r;
+}
+
+//第二引数から始まるリストの全要素に関数を適用し，新しいリストを返す
+//渡す関数に可能な限り新しい値を返すことを期待する
+Val* mapcar(Val* (*func)(Val*), Val* list){
+	if (list->type == NIL) return &nil;
+	Val* bp = new_pair(&nil, &nil);
+
+	Val** d = &(bp->val.pair->l);
+	for(Val* cur=list; list->type != NIL; cur = val_cdr(cur)){
+		if (list->type != PAIR) return NULL; //リストでは無かった
+		*d = new_pair((*func)(val_car(cur)), &nil);
+		d  = &((*d)->val.pair->r);
+	}
+	return bp;
+}
+
 void val_println(Val* v){
 	val_print(v, 1);
 	printf("\n");
@@ -117,19 +143,19 @@ void val_print(Val* v, int isBP){
 		case PAIR:
 			if(0){ //is all cons cell
 				printf("(");
-				val_print(v->val.pair->l, 1);
+				val_print(val_car(v), 1);
 				printf(" . ");
-				val_print(v->val.pair->r, 1);
+				val_print(val_cdr(v), 1);
 				printf(")");
 			}else{
 				if (isBP) printf("(");
-				val_print(v->val.pair->l, 1);
-				if (v->val.pair->r->type == PAIR){
+				val_print(val_car(v), 1);
+				if (val_cdr(v)->type == PAIR){
 					printf(" ");
-					val_print(v->val.pair->r, 0);
-				}else if(v->val.pair->r->type != NIL){
+					val_print(val_cdr(v), 0);
+				}else if(val_cdr(v)->type != NIL){
 					printf(" . ");
-					val_print(v->val.pair->r, 0);
+					val_print(val_cdr(v), 0);
 				}
 				if (isBP) printf(")");
 			}

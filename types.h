@@ -63,6 +63,10 @@ Val* new_integer(int num);
 Val* new_function(Val* args, Val* body);
 Val* new_buildin_function(Val* (*bf)(Val*));
 
+//Pairじゃない時エラー吐く
+Val* val_car(Val* list);
+Val* val_cdr(Val* list);
+
 void val_println(Val* v);
 void val_print(Val* v, int isBP);
 
@@ -71,8 +75,5 @@ void env_regist(Env* env, char* keyStr, Val* val);
 Val* env_fetch (Env* env, char* keyStr);
 void env_println(Env* env);
 
-Val* fundamental_car(Val* l);
-Val* fundamental_cdr(Val* l);
-Val* fundamental_cons(Val* l);
 #endif
 
